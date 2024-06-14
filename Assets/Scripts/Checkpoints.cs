@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Checkpoints : MonoBehaviour
 {
@@ -19,7 +20,8 @@ public class Checkpoints : MonoBehaviour
     private List<float> lapTimesList = new List<float>();
 
     // Missed checkpoint text
-    [SerializeField] private TextMeshProUGUI missedText, timerText, lapText, finishText, placeText, bestLapText;
+    [SerializeField] private TextMeshProUGUI missedText, timerText, lapText, finishText, placeText, bestLapText, positionText;
+    [SerializeField] private Button garageButton;
 
 
     private void Awake()
@@ -52,29 +54,67 @@ public class Checkpoints : MonoBehaviour
         }
     }
 
+    public void ResetCheckpoints(Transform car)
+    {
+        nextCheckpointList[carList.IndexOf(car)] = 0;
+        currentLapList[carList.IndexOf(car)] = 0;
+    }
+
+    public Checkpoint GetNextCheckpoint(Transform car)
+    {
+        int nextCheckpoint = nextCheckpointList[carList.IndexOf(car)];
+        return allCheckpointsList[nextCheckpoint];
+    }
+
     public void onCarThroughCheckpoint(Checkpoint checkpoint, Transform car)
     {
         int nextCheckpoint = nextCheckpointList[carList.IndexOf(car)];
-
         Checkpoint correctCheckpoint = allCheckpointsList[nextCheckpoint];
 
         if (allCheckpointsList.IndexOf(checkpoint) == nextCheckpoint)
         {
             nextCheckpointList[carList.IndexOf(car)] = (nextCheckpoint + 1) % allCheckpointsList.Count;  // (next checkpoint < count  -->  remainder = next checkpoint
+            int currentLap = currentLapList[carList.IndexOf(car)];
 
-            missedText.gameObject.SetActive(false);
-            correctCheckpoint.toggleView(false);
+            if (!car.gameObject.GetComponent<CarController>().IsAI())
+            {
+                missedText.gameObject.SetActive(false);
+                correctCheckpoint.toggleView(false);
+
+                // Werkt alleen bij 1V1
+                if (currentLapList.Min() < currentLap)
+                {
+                    positionText.text = "position: 1/2";
+                }
+                else
+                {
+                    if (nextCheckpointList.Max() == nextCheckpoint+1)
+                    {
+                        positionText.text = "position: 1/2";
+                    }
+                    else
+                    {
+                        positionText.text = "position: 2/2";
+                    }
+                }
+            } else
+            {
+                car.GetComponent<CarAgent>().CorrectCheckpoint();
+            }
 
             if (allCheckpointsList.IndexOf(checkpoint) == 0)
             {
-                int currentLap = currentLapList[carList.IndexOf(car)];
 
                 if (currentLap == 0)
                 {
-                    lapText.gameObject.SetActive(true);
+                    if (!car.gameObject.GetComponent<CarController>().IsAI())
+                    {
+                        lapText.gameObject.SetActive(true);
+                    }
                     racing = true;
                     lapTimesList.Add(0.00f);
-                } else
+                }
+                else
                 {
                     lapTimesList.Add(time- lapTimesList[lapTimesList.Count - 1]);
                 }
@@ -83,11 +123,15 @@ public class Checkpoints : MonoBehaviour
                 {
                     currentLap++;
                     currentLapList[carList.IndexOf(car)] = currentLap;
-                    lapText.text = "LAP " + currentLap + " / " + laps;
+
+                    if (!car.gameObject.GetComponent<CarController>().IsAI())
+                    {
+                        lapText.text = "LAP " + currentLap + " / " + laps;
+                    }
                 } else
                 {
                     racing = false;
-                    finished();
+                    finished(car);
                 }
 
             }
@@ -95,13 +139,18 @@ public class Checkpoints : MonoBehaviour
         else
         {
             if (!racing) return;
-
-            missedText.gameObject.SetActive(true);
-            correctCheckpoint.toggleView(true);
+            if (!car.gameObject.GetComponent<CarController>().IsAI())
+            {
+                missedText.gameObject.SetActive(true);
+                correctCheckpoint.toggleView(true);
+            } else
+            {
+                car.GetComponent<CarAgent>().WrongCheckpoint();
+            }
         }
     }
 
-    private void finished()
+    private void finished(Transform car)
     {
         Debug.Log("finished race");
         lapTimesList.RemoveAt(0);
@@ -110,12 +159,15 @@ public class Checkpoints : MonoBehaviour
             Debug.Log(lapTime);
         }
 
-        finishText.gameObject.SetActive(true);
-        placeText.gameObject.SetActive(true);
-        bestLapText.gameObject.SetActive(true);
+        if (!car.gameObject.GetComponent<CarController>().IsAI())
+        {
+            finishText.gameObject.SetActive(true);
+            placeText.gameObject.SetActive(true);
+            bestLapText.gameObject.SetActive(true);
+            garageButton.gameObject.SetActive(true);
 
-        placeText.text = "1st place";
-        bestLapText.text = "Best lap: " + lapTimesList.Min().ToString("0.00") + "s";
-
+            placeText.text = "1st place";
+            bestLapText.text = "Best lap: " + lapTimesList.Min().ToString("0.00") + "s";
+        }
     }
 }

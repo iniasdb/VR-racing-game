@@ -8,6 +8,8 @@ TagManager:
   - MBS:Wall
   - Obs
   - Crash
+  - Checkpoint
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -16,7 +18,7 @@ TagManager:
   - Water
   - UI
   - Checkpoint
-  - 
+  - Wall
   - Pointer
   - Not_In_Minimap
   - Minimap_Layer

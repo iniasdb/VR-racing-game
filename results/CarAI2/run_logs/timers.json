@@ -1,0 +1,47 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1718216674",
+        "python_version": "3.9.19 (main, Mar 21 2024, 17:21:27) [MSC v.1916 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\inias\\anaconda3\\envs\\unity\\Scripts\\mlagents-learn Config/CarAI.yaml --run-id=CarAI2 --force",
+        "mlagents_version": "0.30.0",
+        "mlagents_envs_version": "0.30.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "1.7.1+cpu",
+        "numpy_version": "1.21.2",
+        "end_time_seconds": "1718216675"
+    },
+    "total": 1.5723598,
+    "count": 1,
+    "self": 0.02727220000000008,
+    "children": {
+        "run_training.setup": {
+            "total": 0.08783230000000009,
+            "count": 1,
+            "self": 0.08783230000000009
+        },
+        "TrainerController.start_learning": {
+            "total": 1.4572553,
+            "count": 1,
+            "self": 0.0012870000000000381,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 1.4559448000000001,
+                    "count": 1,
+                    "self": 1.4559448000000001
+                },
+                "trainer_threads": {
+                    "total": 2.9999999999752447e-06,
+                    "count": 1,
+                    "self": 2.9999999999752447e-06
+                },
+                "TrainerController._save_models": {
+                    "total": 2.0499999999756824e-05,
+                    "count": 1,
+                    "self": 2.0499999999756824e-05
+                }
+            }
+        }
+    }
+}

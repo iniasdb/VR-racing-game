@@ -14,6 +14,10 @@ public class CarController : MonoBehaviour
     private Rigidbody carRigidbody;
     private int kph;
     private Vector3 com;
+    private bool isAI;
+    private bool firstPerson = true;
+    
+    [SerializeField] private Vector3 position;
 
     // Settings
     [SerializeField] private float motorForce, brakeForce, maxSteerAngle, turnSensitivity;
@@ -30,22 +34,81 @@ public class CarController : MonoBehaviour
     // Speedometer
     [SerializeField] private TextMeshProUGUI kphText;
 
+    // Audiosources
+    [SerializeField] private AudioSource interiorSound, idleSound;
+    private int playing;
+
+    public void SetAI(bool isAI)
+    {
+        this.isAI = isAI;
+    }
+
+    public bool IsAI()
+    {
+        return this.isAI;
+    }
+
+    public void SetFPV(bool isFPV)
+    {
+        this.firstPerson = isFPV;
+    }
+
     private void Awake()
     {
         carRigidbody = GetComponent<Rigidbody>();
         carRigidbody.centerOfMass = com;
+        if (!isAI)
+        {
+            idleSound.Play();
+            playing = 0;
+        }
+
     }
 
     private void FixedUpdate()
     {
-        kph = Convert.ToInt32(Math.Floor(carRigidbody.velocity.magnitude * 3.6));
-        kphText.text = kph + " km/h";
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            gameObject.transform.position = position;
+            gameObject.transform.forward = new Vector3(0, 0, 0);
+        }
 
-        GetInput();
+        if (!isAI)
+        {
+            kph = Convert.ToInt32(Math.Floor(carRigidbody.velocity.magnitude * 3.6));
+            kphText.text = kph + " km/h";
+
+            if (kph <= 10)
+            {
+                if (playing != 0)
+                {
+                    interiorSound.Stop();
+                    idleSound.Play();
+                    playing = 0;
+                }
+            }
+            else
+            {
+                if (firstPerson)
+                {
+                    if (playing != 1)
+                    {
+                        interiorSound.Play();
+                        idleSound.Stop();
+                        playing = 1;
+                    }
+                }
+            }
+
+            GetInput();
+        }
         HandleMotor();
         HandleSteering();
-        UpdateWheels();
-        UpdateSteeringwheel();
+        if (!isAI)
+        {
+            UpdateWheels();
+            UpdateSteeringwheel();
+        }
     }
 
     private void GetInput()
@@ -59,6 +122,33 @@ public class CarController : MonoBehaviour
         // Braking Input
         isBraking = Input.GetKey(KeyCode.Space);
         gameObject.GetComponent<LightsController>().brakeLights(isBraking);
+    }
+
+    public void SetInputs(float forwardAmount, float turnAmount, float brakes)
+    {
+        // Steering Input
+        horizontalInput = turnAmount;
+
+        // Acceleration Input
+        verticalInput = forwardAmount;
+
+        // Braking Input
+        isBraking = Convert.ToBoolean(brakes);
+        if (!isAI)
+        {
+            gameObject.GetComponent<LightsController>().brakeLights(isBraking);
+        }
+    }
+
+    public void StopCompletely()
+    {
+        while (kph > 0)
+        {
+            isBraking = true;
+            ApplyBrakes();
+        }
+
+        isBraking = false;
     }
 
     private void HandleMotor()
