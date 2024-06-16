@@ -23,7 +23,6 @@ public class CameraController : MonoBehaviour
         {
             povCamera.enabled = !povCamera.enabled;
             followCamera.enabled = !followCamera.enabled;
-            Debug.Log(povCamera.enabled);
             carController.SetFPV(povCamera.enabled);
         }
     }

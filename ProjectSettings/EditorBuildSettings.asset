@@ -11,10 +11,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Garage.unity
     guid: f9ce3a9ffeca4e8499f6f8527641d612
+  - enabled: 1
+    path: Assets/Scenes/CustomizeCar.unity
+    guid: 9767c0fb6bef3a04eb6bd010b7713800
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 3c7b68b0f9537544fbd10ae185d7791e,
       type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 2396c89eda9726941a33fe9ad3feb7e3,
+      type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 45919cf9db1605e468be4c099af419b6,
       type: 2}
     xr.sdk.mock-hmd.settings: {fileID: 11400000, guid: 56e196a6882c23948a7c2313e4b0f148,
       type: 2}

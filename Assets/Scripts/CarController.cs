@@ -16,6 +16,7 @@ public class CarController : MonoBehaviour
     private Vector3 com;
     private bool isAI;
     private bool firstPerson = true;
+    private Checkpoints checkpoints;
     
     [SerializeField] private Vector3 position;
 
@@ -48,6 +49,11 @@ public class CarController : MonoBehaviour
         return this.isAI;
     }
 
+    public void SetCheckpoints(Checkpoints cps)
+    {
+        this.checkpoints = cps;
+    }
+
     public void SetFPV(bool isFPV)
     {
         this.firstPerson = isFPV;
@@ -67,10 +73,11 @@ public class CarController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && this.checkpoints != null)
         {
-            gameObject.transform.position = position;
-            gameObject.transform.forward = new Vector3(0, 0, 0);
+            Checkpoint cp = this.checkpoints.GetLastCheckpointPassed();
+
+            gameObject.transform.position = cp.transform.position;
         }
 
         if (!isAI)
@@ -89,14 +96,11 @@ public class CarController : MonoBehaviour
             }
             else
             {
-                if (firstPerson)
+                if (playing != 1)
                 {
-                    if (playing != 1)
-                    {
-                        interiorSound.Play();
-                        idleSound.Stop();
-                        playing = 1;
-                    }
+                    interiorSound.Play();
+                    idleSound.Stop();
+                    playing = 1;
                 }
             }
 

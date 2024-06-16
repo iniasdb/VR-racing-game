@@ -21,10 +21,10 @@ behaviors:
         gamma: 0.99
         strength: 1.0
       gail:
-        strength: 0.3
+        strength: 0.5
         demo_path: demos/CarAIDemo2.demo
     behavioral_cloning:
-      strength: 0.3
+      strength: 0.5
       demo_path: demos/CarAIDemo2.demo
     max_steps: 50000
     time_horizon: 64

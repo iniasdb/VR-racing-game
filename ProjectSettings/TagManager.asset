@@ -10,6 +10,7 @@ TagManager:
   - Crash
   - Checkpoint
   - Wall
+  - Hand
   layers:
   - Default
   - TransparentFX
