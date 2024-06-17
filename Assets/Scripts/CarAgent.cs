@@ -33,17 +33,13 @@ public class CarAgent : Agent
 
     public override void OnEpisodeBegin()
     {
-        //Debug.Log("begin");
         transform.position = new Vector3(787f, 0.2f, 655.5f);
         transform.forward = new Vector3(0.01f, 0f, -1f);
-        //Debug.Log(transform.forward); 
         checkpoints.ResetCheckpoints(transform);
-        //carController.StopCompletely();
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        //implementeren?    DONE
         Vector3 checkpointForward = checkpoints.GetNextCheckpoint(transform).transform.forward;
         float directionDot = Vector3.Dot(transform.forward, checkpointForward);
         sensor.AddObservation(directionDot);
@@ -54,10 +50,7 @@ public class CarAgent : Agent
         float forwardAmount = 0f;
         float turnAmount = 0f;
         float brakes = 0f;
-/*        Debug.Log("forward: " + actions.DiscreteActions[0]);
-        Debug.Log("turn: " + actions.DiscreteActions[1]);
-        Debug.Log("brakes: " + actions.DiscreteActions[2]);
-*/
+
         switch (actions.DiscreteActions[0])
         {
             case 0:
@@ -94,7 +87,6 @@ public class CarAgent : Agent
                 break;
         }
 
-        //implementeren     DONE
         carController.SetInputs(forwardAmount, turnAmount, brakes);
     }
 
@@ -123,7 +115,6 @@ public class CarAgent : Agent
         {
             collisionTime = 0.0f;
             AddReward(-0.5f);
-            //EndEpisode();
         }
     }
 

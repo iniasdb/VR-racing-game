@@ -27,8 +27,6 @@ public class JoyStickController : MonoBehaviour
                 transform.Rotate(0, 0, offset*5, Space.Self);
             }
 
-            Debug.Log(joystickRot);
-
             if (joystickRot < 0)
             {
                 car.Rotate(0, Time.deltaTime * 20 * (joystickRot*10), 0, Space.Self);

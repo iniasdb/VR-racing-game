@@ -121,11 +121,6 @@ public class Checkpoints : MonoBehaviour
             lastCheckpointPassed = allCheckpointsList[currentCheckpoint];
         }
 
-        /*        if (nextCheckpointList.Count() > 0 && !car.gameObject.GetComponent<CarController>().IsAI())
-                {
-                    lastCheckpointPassed = allCheckpointsList[nextCheckpointList[carList.IndexOf(car)]-1];
-                }*/
-
 
         if (allCheckpointsList.IndexOf(checkpoint) == nextCheckpoint)
         {

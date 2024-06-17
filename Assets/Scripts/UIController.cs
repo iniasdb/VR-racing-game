@@ -86,7 +86,6 @@ public class UIController : MonoBehaviour
 
         saveButton.onClick.AddListener(delegate {
             Debug.Log("saved");
-            Debug.Log(chosenBody.name);
             CarDesign.Instance.SaveDesign(chosenBody, chosenRim, chosenLicenseplate);
         });
 
